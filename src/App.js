@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
+import Login from './components/Login/Login';
+import SignUp from './components/SignUp/SignUp';
 import Surfboard from './components/Surfboards/Surfboard';
 import Surfboards from './components/Surfboards/Surfboards';
 import Wetsuit from './components/Wetsuits/Wetsuit';
@@ -13,6 +15,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home></Home>}> </Route>
+          {<Route path='/login' element={<Login></Login>}> </Route>}
+          {<Route path='/signup' element={<SignUp></SignUp>}> </Route>}
           
           {/*Surfboards */}
           <Route path='/surfboard/:id' element={<Surfboard></Surfboard>}> </Route>
