@@ -25,15 +25,15 @@ class App extends Component{
           {<Route path='/signup' element={<SignUp></SignUp>}> </Route>}
           
           {/*Surfboards */}
-          <Route path='/surfboard/:id' element={<Surfboard editMode={false}></Surfboard>}> </Route>
+          <Route path='/surfboard/:id?' element={<Surfboard></Surfboard>}> </Route>
           <Route path='/surfboards' element={<Surfboards></Surfboards>}> </Route>
 
           {/*Wetsuits */}
-          <Route path='/wetsuit/:id' element={<Wetsuit></Wetsuit>}> </Route>
+          <Route path='/wetsuit/:id?' element={<Wetsuit></Wetsuit>}> </Route>
           <Route path='/wetsuits' element={<Wetsuits></Wetsuits>}> </Route>
 
           {/*Spots */}
-          <Route path='/spot/:id' element={<Spot></Spot>}> </Route>
+          <Route path='/spot/:id?' element={<Spot></Spot>}> </Route>
           <Route path='/spots' element={<Spots></Spots>}> </Route>
         </Routes>
       </BrowserRouter>

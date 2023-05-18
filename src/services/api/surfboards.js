@@ -28,8 +28,19 @@ const updateSurfboard = async(id, surfboard) => {
     })
 }
 
+const createSurfboard = async(surfboard) => {
+    return axios.post(`http://127.0.0.1:8000/api/surfboards/`, surfboard).then( response => {
+        console.log(response.data)
+        return response
+    }).catch( error => {
+        console.error(error)
+        return error
+    })
+}
+
 export {
     allSurfboards,
     getSurfboard,
-    updateSurfboard
+    updateSurfboard,
+    createSurfboard
 }

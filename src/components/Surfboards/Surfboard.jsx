@@ -1,41 +1,54 @@
 import React, {Component} from 'react'
-import { getSurfboard, updateSurfboard } from '../../services/api/surfboards'
+import { getSurfboard, updateSurfboard, createSurfboard } from '../../services/api/surfboards'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
-
-
-
-
-
-
-
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import {FINS_MATERIALS, SURFBOARD_MATERIALS} from '../../constants';
 
 class Surfboard extends Component {
 
   constructor(props) {
     super(props);
+    var url = window.location.href.split('/')
+    this.surfboardId = url.length === 5 ? url[4] : false
     this.state = {
       name: "React",
-      surfboard: null,
-      editMode: props.editMode,
-      surfboardId: window.location.href.split('/')[4]
+      surfboard: {
+        name: "",
+        brand: "",
+        description: "",
+        fins_material: "",
+        images: "",
+        length: "",
+        material: "",
+        number_of_fins: "",
+        owner: "",
+        thickness: "",
+        volume: "",
+        width: ""
+      },
+      editMode: this.surfboardId ? false : true,
     };
     this.onChange = this.onChange.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.surfboardCache = null
-    this.initializeSurfboard();
+    if (this.surfboardId){
+      this.initializeSurfboard();
+    }
   }
 
   async initializeSurfboard(){
     try{
-      const response = await getSurfboard(this.state.surfboardId);
+      const response = await getSurfboard(this.surfboardId);
       this.setState({ surfboard: response.data }); // Update the state with surfboard data
       this.surfboardCache = Object.assign({}, this.state.surfboard);
       console.log(this.state.surfboard);
@@ -45,12 +58,16 @@ class Surfboard extends Component {
     }
   }
 
-  async updateSurfboard(){
+  async saveSurfboard(){
     try{
       delete this.state.surfboard.images
-      const response = await updateSurfboard(this.state.surfboardId, this.state.surfboard);
+      var response = null
+      if (this.surfboardId){
+        response = await updateSurfboard(this.surfboardId, this.state.surfboard);
+      } else {
+        response = await createSurfboard(this.state.surfboard);
+      }
 
-      debugger
       if (response.status === 200){
         this.setState({ surfboard: response.data }); // Update the state with surfboard data
         this.surfboardCache = Object.assign({}, this.state.surfboard);
@@ -76,7 +93,8 @@ class Surfboard extends Component {
     this.setState({editMode: true})
   }
   onSave(){
-    this.updateSurfboard()
+    debugger
+    this.saveSurfboard()
     this.setState({editMode: false})
   }
   onCancel(){
@@ -92,12 +110,20 @@ class Surfboard extends Component {
     <>
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="lg">
-        {this.state.surfboard != null ? (
           <div key={this.state.surfboard.id}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Typography variant="h3" color="primary" align="center">
-                  {this.state.surfboard.name}
+                <Typography component="span" variant="h3" color="primary" align="center">
+                 {this.state.editMode ? (
+                    <TextField
+                      id="surfboardNameId"
+                      label="Name"
+                      name="name"
+                      type="text"
+                      value={this.state.surfboard.name}
+                      onChange={this.onChange}
+                    />
+                  ) : (this.state.surfboard.name)}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
@@ -113,7 +139,7 @@ class Surfboard extends Component {
                       align="center"/>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Description: {this.state.editMode ? (
                     <TextField
                       id="surfboardDescriptionId"
@@ -127,7 +153,7 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Brand: {this.state.editMode ? (
                     <TextField
                       id="surfboardBrandId"
@@ -141,7 +167,7 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Number of fins: {this.state.editMode ? (
                     <TextField
                       id="surfboardNumber_of_finsId"
@@ -155,35 +181,47 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Material: {this.state.editMode ? (
-                    <TextField
-                      id="surfboardMaterialId"
-                      label="Material"
-                      name="material"
-                      type="text"
-                      value={this.state.surfboard.material}
-                      onChange={this.onChange}
-                    />
-                  ) : (this.state.surfboard.material)}
+                    <>
+                      <InputLabel id="surfboardMaterialId">Material</InputLabel>
+                      <Select
+                        id="surfboardMaterialId"
+                        name="material"
+                        value={this.state.surfboard.material}
+                        label="Material"
+                        onChange={this.onChange}
+                      > 
+                        {Object.keys(SURFBOARD_MATERIALS).map(key => ( 
+                          <MenuItem value={key}>{SURFBOARD_MATERIALS[key]}</MenuItem>
+                        ))}
+                      </Select>
+                    </>
+                  ) : (SURFBOARD_MATERIALS[this.state.surfboard.material])}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Fins material: {this.state.editMode ? (
-                    <TextField
+                    <>
+                    <InputLabel id="surfboardFinsMaterialId">Fins Material</InputLabel>
+                    <Select
                       id="surfboardFinsMaterialId"
                       label="Fins material"
                       name="fins_material"
-                      type="text"
                       value={this.state.surfboard.fins_material}
                       onChange={this.onChange}
-                    />
-                  ) : (this.state.surfboard.fins_material)}
+                    > 
+                      {Object.keys(FINS_MATERIALS).map(key => ( 
+                        <MenuItem value={key}>{FINS_MATERIALS[key]}</MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                  ) : (FINS_MATERIALS[this.state.surfboard.fins_material])}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Length: {this.state.editMode ? (
                     <TextField
                       id="surfboardLengthId"
@@ -197,7 +235,7 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Width: {this.state.editMode ? (
                     <TextField
                       id="surfboardWidthId"
@@ -211,7 +249,7 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Thickness: {this.state.editMode ? (
                     <TextField
                       id="surfboardThicknessId"
@@ -225,7 +263,7 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" color="primary">
+                <Typography component="span" variant="body1" color="primary">
                   Volume: {this.state.editMode ? (
                     <TextField
                       id="surfboardVolumeId"
@@ -260,8 +298,6 @@ class Surfboard extends Component {
               
             </Grid>
           </div>
-        ) : ('No board with this name')
-        }
       </Container>
     </ThemeProvider>
     
