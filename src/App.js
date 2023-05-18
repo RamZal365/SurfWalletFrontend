@@ -8,8 +8,14 @@ import Wetsuit from './components/Wetsuits/Wetsuit';
 import Wetsuits from './components/Wetsuits/Wetsuits';
 import Spot from './components/Spots/Spot';
 import Spots from './components/Spots/Spots';
+import { Component } from 'react';
 
-function App() {
+
+class App extends Component{
+  state = {
+    data:[]
+  }
+  render(){
   return (
     <div className="container">
       <BrowserRouter>
@@ -19,7 +25,7 @@ function App() {
           {<Route path='/signup' element={<SignUp></SignUp>}> </Route>}
           
           {/*Surfboards */}
-          <Route path='/surfboard/:id' element={<Surfboard></Surfboard>}> </Route>
+          <Route path='/surfboard/:id' element={<Surfboard editMode={false}></Surfboard>}> </Route>
           <Route path='/surfboards' element={<Surfboards></Surfboards>}> </Route>
 
           {/*Wetsuits */}
@@ -33,6 +39,7 @@ function App() {
       </BrowserRouter>
     </div>
   );
+}
 }
 
 export default App;

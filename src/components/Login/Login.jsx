@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Navigate } from 'react-router-dom';
+/*import { Navigate } from 'react-router-dom';*/
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -26,7 +26,6 @@ function Copyright(props) {
     </Typography>
   );
 }
-var redirectHome = false
 
 const theme = createTheme({
   palette: {
@@ -47,7 +46,6 @@ export default function LogIn() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    this.redirectHome = true
   };
   
   return (
@@ -61,7 +59,7 @@ export default function LogIn() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://images6.alphacoders.com/407/407732.jpg)',
+            backgroundImage: `url(https://media.istockphoto.com/id/858905606/es/vector/patr%C3%B3n-transparente-de-vector-con-surfistas-fondo-de-verano.jpg?s=612x612&w=0&k=20&c=q6IwITDaXMGalVYbylCL2qGhGbVYzyHr8KIL5uYpmmQ=)`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -136,7 +134,6 @@ export default function LogIn() {
         </Grid>
       </Grid>
     </ThemeProvider>
-    { this.redirectHome ? (<Navigate push to="/"/>) : null }
     </>
   );
 }
