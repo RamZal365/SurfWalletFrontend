@@ -93,7 +93,6 @@ class Surfboard extends Component {
     this.setState({editMode: true})
   }
   onSave(){
-    debugger
     this.saveSurfboard()
     this.setState({editMode: false})
   }
