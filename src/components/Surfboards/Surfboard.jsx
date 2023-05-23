@@ -51,7 +51,6 @@ class Surfboard extends Component {
       const response = await getSurfboard(this.surfboardId);
       this.setState({ surfboard: response.data }); // Update the state with surfboard data
       this.surfboardCache = Object.assign({}, this.state.surfboard);
-      console.log(this.state.surfboard);
     }
     catch (error) {
       console.error(error);

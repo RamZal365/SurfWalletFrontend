@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const allSurfboards = async(state) => {
-    axios.get('http://127.0.0.1:8000/api/surfboards/').then( response => {
+const allSurfboards = async() => {
+    return axios.get('http://127.0.0.1:8000/api/surfboards/').then( response => {
         console.log(response.data)
-        state(response.data)
+        return response
     }).catch( error => {
         console.error(error)
     })
