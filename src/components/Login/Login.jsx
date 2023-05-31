@@ -31,6 +31,7 @@ class LogIn extends Component {
       response = await login(username, password);
       if (response.status === 200){
         this.setState({token: response.data.token})
+        sessionStorage.setItem('token', response.data.token)
       }
       else{
         console.error(response.data.message);

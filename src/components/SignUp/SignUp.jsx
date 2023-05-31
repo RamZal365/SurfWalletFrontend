@@ -63,6 +63,7 @@ class SignUp extends Component {
       response = await signup(username, password);
       if (response.status === 201){
         this.setState({token: response.data.token})
+        sessionStorage.setItem('token', response.data.token)
       }
       else{
         console.error(response.message);

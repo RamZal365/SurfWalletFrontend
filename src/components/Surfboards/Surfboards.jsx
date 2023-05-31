@@ -59,7 +59,7 @@ class Surfboards extends Component {
     ];
     this.state = {
       columns: columns,
-      rows: [],
+      surfboards: [],
     }
     this.surfboardsCache = null;
   }
@@ -73,7 +73,7 @@ class Surfboards extends Component {
   async initializeSurfboards(){
     try{
       const response = await allSurfboards();
-      this.setState({ rows: response.data}); // Update the state with surfboard data
+      this.setState({ surfboards: response.data}); // Update the state with surfboard data
       this.surfboardsCache = Object.assign({}, this.state.surfboards);
     }
     catch (error) {
@@ -87,7 +87,7 @@ class Surfboards extends Component {
     <>
     <div style={{ height: 400, width: '100%' }}>
               <DataGrid
-                rows={this.state.rows}
+                rows={this.state.surfboards}
                 columns={this.state.columns}
                 initialState={{
                   pagination: {

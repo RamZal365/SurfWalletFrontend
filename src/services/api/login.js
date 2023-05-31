@@ -14,6 +14,17 @@ const login = async(username, password) => {
     })
 }
 
+const logout = async(userToken) => {
+    console.log(userToken)
+    return axios.post('http://127.0.0.1:8000/api/logout/', {userToken: userToken}).then( response => {
+        console.log(response.data)
+        return response
+    }).catch( error => {
+        console.error(error)
+        return error.response
+    })
+}
+
 
 const signup = async(form) => {
     return axios.post('http://127.0.0.1:8000/api/signup/',
@@ -36,5 +47,6 @@ const signup = async(form) => {
 
 export {
     login,
-    signup
+    signup,
+    logout
 }
