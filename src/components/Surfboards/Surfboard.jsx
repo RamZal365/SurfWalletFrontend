@@ -20,6 +20,7 @@ class Surfboard extends Component {
     this.surfboardId = url.length === 5 ? url[4] : false
     this.state = {
       name: "React",
+      uploadedImage: "",
       surfboard: {
         name: "",
         brand: "",
@@ -40,7 +41,11 @@ class Surfboard extends Component {
     this.onSave = this.onSave.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onCancel = this.onCancel.bind(this);
+    this.addImage = this.addImage.bind(this);
     this.surfboardCache = null
+  }
+
+  componentDidMount() {
     if (this.surfboardId){
       this.initializeSurfboard();
     }
@@ -59,7 +64,6 @@ class Surfboard extends Component {
 
   async saveSurfboard(){
     try{
-      delete this.state.surfboard.images
       var response = null
       if (this.surfboardId){
         response = await updateSurfboard(this.surfboardId, this.state.surfboard);
@@ -99,6 +103,23 @@ class Surfboard extends Component {
     this.setState({surfboard: this.surfboardCache})
     this.setState({editMode: false})
   }
+  addImage(event){
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      var surfboard = this.state.surfboard;
+      const image = {
+        image: reader.result,
+        is_cover: this.state.surfboard.images.length,
+        order: this.state.surfboard.images.length
+      }
+      surfboard.images.push(image)
+      this.setState({surfboard: surfboard})
+    };
+
+    reader.readAsDataURL(file);
+  }
   
 
   render(){
@@ -125,7 +146,9 @@ class Surfboard extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Box  component="img"
+              {this.state.surfboard.images.length === 0 ? ("No pictures yet") : (
+              this.state.surfboard.images.map((image) => 
+              <Box  component="img"
                       sx={{
                         height: 233,
                         width: 350,
@@ -133,8 +156,19 @@ class Surfboard extends Component {
                         maxWidth: { xs: 350, md: 250 },
                       }}
                       alt="The house from the offer."
-                      src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
+                      src={image.image}
                       align="center"/>
+                      )
+                      )}
+              {this.state.editMode ? (
+                <Button variant="contained"
+                        component="label">
+                  Upload File
+                  <input  type="file"
+                          accept="image/png, image/jpeg"
+                          onChange={this.addImage}
+                          hidden/>
+                </Button>) : (null)}
               </Grid>
               <Grid item xs={12}>
                 <Typography component="span" variant="body1" color="primary">
